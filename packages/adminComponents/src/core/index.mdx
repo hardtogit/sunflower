@@ -1,0 +1,42 @@
+---
+name: Core
+route: /core
+order: 4
+menu: 核心
+sidebar: true
+---
+import 'antd/dist/antd.css'
+import 'antd';
+import Http from '@cot/core/lib/http/'
+
+<div onClick={()=>{ 
+      const serverConfig = {
+        servers: { x: 'http://10.6.1.210:8181'},
+        contentKey: 'content',
+        // 使用mock代理类别：0 - 仅使用mock数据；1 - 部分使用mock数据；2 - 不使用mock数据
+        useMockProxyType: 2,
+        authorityFailureCodes: ['120001', '120002', '120003', '120010','10020002']
+        };
+        const  http = Http.create(serverConfig);
+
+        http.create('x').post('/ep/web/basic/carrier/list')
+    
+    }}>发送http</div>
+
+
+```js
+<div onClick={()=>{ 
+      const serverConfig = {
+        servers: { x: 'http://10.6.1.210:8181'},
+        contentKey: 'content',
+        // 使用mock代理类别：0 - 仅使用mock数据；1 - 部分使用mock数据；2 - 不使用mock数据
+        useMockProxyType: 2,
+        authorityFailureCodes: ['120001', '120002', '120003', '120010','10020002']
+        };
+        const  http = Http.create(serverConfig);
+
+        http.create('x').post('/ep/web/basic/carrier/list')
+    
+    }}>发送http</div>
+
+```

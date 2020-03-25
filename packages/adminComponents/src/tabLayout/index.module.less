@@ -1,0 +1,94 @@
+
+:global {
+  html, body, #root {
+    height: 100%;
+  }
+  .mt20 {
+    margin-top: 20px;
+  }
+  .mt10 {
+    margin-top: 10px;
+  }
+  .mb20 {
+    margin-bottom: 20px;
+  }
+  .mll0 {
+    margin-left: 10px;
+  }
+  .ml20 {
+    margin-left: 20px;
+  }
+  .mr20 {
+    margin-right: 20px;
+  }
+  .fl {
+    float: left;
+  }
+  .fr {
+    float: right;
+  }
+  .actions {
+    margin-bottom: 8px;
+    button {
+      margin-right: 5px;
+    }
+  }
+  .text-editor .ant-form-item-control {
+    line-height: normal!important;
+  }
+  .rc-tree-select{
+    width: 100% !important;
+  }
+  .rc-tree-select-selection{
+    min-height: 32px;
+    line-height: 32px;
+    border-radius: 4px !important;
+  }
+  .has-error .rc-tree-select-selection {
+    border-color: #f5222d;
+  }
+  .ant-breadcrumb{
+    display: none;
+  }
+  .ant-select-selection--multiple{
+    -ms-overflow-style: none;
+    overflow:-moz-scrollbars-none;
+    &::-webkit-scrollbar { width: 0 !important;height: 0 }
+  }
+}
+
+// 全局覆盖第三方组件样式
+:global {
+    background-color: #eee;
+    .rc-tree-select-selection--multiple{
+      line-height: 32px;
+      border-radius: 4px;
+    }
+    .ant-select-tree {
+      height: 200px;
+    }
+  }
+.contextMenu{
+  position: fixed;
+  z-index: 100;
+  left: 200px;
+  padding:8px 0px;
+  top:100px;
+  background-color: #fff;
+  //width: 142px;
+  border: 1px solid #ddd;
+  ul{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    li{
+      font-size: 12px;
+      line-height: 24px;
+      padding: 0 12px;
+      &:hover{
+        user-select: none;
+        background-color: #ddd;
+      }
+    }
+  }
+}

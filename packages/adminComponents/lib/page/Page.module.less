@@ -1,0 +1,29 @@
+// @import "../../themes/vars.less";
+
+.contentInner{
+   background: #e8eaed;  // box-shadow: @shadow-1;
+  height: ~"calc(100vh - 64px)";
+  position: relative;
+  background-color: #fff;
+  overflow-y: auto;
+  overflow-x: hidden
+}
+.containerOut{
+  padding: 15px 20px;
+
+}
+.listPage-searchBar{
+  border: 1px solid #ddd;
+  padding: 24px 0 0 0;
+}
+.listPage-table{
+  margin-top: 24px;
+}
+
+@media (max-width: 767px) {
+  .contentInner {
+    padding: 12px;
+    min-height: ~"calc(100vh - 160px)";
+    background-color: #eaecef;
+  }
+}

@@ -1,0 +1,20 @@
+---
+name: Page
+route: /page
+order: 4
+menu: 布局
+sidebar: true
+---
+import 'antd/dist/antd.css'
+import ListPage from '../../lib/page/listPage'
+import {SearchFormHook} from '../searchForm'
+import {Page} from './'
+
+<Page>
+    <ListPage
+       searchBar={<SearchFormHook fields={[{
+                                               key: '_id',
+                                               name: '记录标识',
+                                             }]}/>}
+    />
+</Page>

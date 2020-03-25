@@ -1,0 +1,42 @@
+{
+  "name": "@cot/core",
+  "version": "0.0.23",
+  "description": "",
+  "main": "lib/index.js",
+  "authors": {
+    "name": "",
+    "email": ""
+  },
+  "repository": "/@cot/core",
+  "scripts": {
+    "dev": "babel src --out-dir lib --watch",
+    "build": "babel src --out-dir lib"
+  },
+  "peerDependencies": {
+    "antd": "^3.20.3",
+    "dva": "^2.4.1",
+    "react": "16.x"
+  },
+  "files": [
+    "lib"
+  ],
+  "license": "MIT",
+  "gitHead": "36a9d43be1c5bfea4044ae12ebea59a623dae471",
+  "dependencies": {
+    "async": "^3.1.0",
+    "es6-promise": "^4.2.8",
+    "eslint": "^5.0.0",
+    "js-cookie": "^2.2.0",
+    "moment": "^2.24.0",
+    "path-to-regexp": "^3.0.0",
+    "qs": "^6.7.0",
+    "react-router-redux": "^4.0.8",
+    "whatwg-fetch": "^3.0.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "babel-eslint": "8.x"
+  }
+}
