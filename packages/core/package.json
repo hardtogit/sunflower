@@ -1,13 +1,13 @@
 {
-  "name": "@cot/core",
-  "version": "0.0.23",
+  "name": "@sunflower/core",
+  "version": "0.0.1",
   "description": "",
   "main": "lib/index.js",
   "authors": {
     "name": "",
     "email": ""
   },
-  "repository": "/@cot/core",
+  "repository": "/@sunflower/core",
   "scripts": {
     "dev": "babel src --out-dir lib --watch",
     "build": "babel src --out-dir lib"

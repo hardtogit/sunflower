@@ -3,6 +3,7 @@ packages/**/tsclib
 
 # Editor
 .vscode
+.idea
 
 # Logs
 logs

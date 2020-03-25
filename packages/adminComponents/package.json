@@ -1,41 +1,41 @@
 {
-  "name": "@cot/ui",
-  "version": "0.0.39",
-  "description": "",
-  "main": "lib/index.js",
-  "module": "lib/index.esm.js",
-  "authors": {
-    "name": "",
-    "email": ""
-  },
-  "files": [
-    "lib",
-    "dist"
-  ],
-  "repository": "/@cot/ui",
-  "scripts": {
-    "dev": "umi-lib doc dev",
-    "build": "umi-lib build"
-  },
-  "peerDependencies": {
-    "antd": "^3.20.3",
-    "react": "16.x"
-  },
-  "devDependencies": {
-    "babel-eslint": "8.x",
-    "docz-theme-umi": "^2.0.5",
-    "eslint": "^5.0.0",
-    "postcss-less": "^3.1.4",
-    "umi-library": "^1.1.1"
-  },
-  "license": "MIT",
-  "dependencies": {
-    "@cot/core": "^0.0.23",
-    "antd": "^3.20.5",
-    "classnames": "^2.2.6",
-    "moment": "^2.24.0",
-    "prop-types": "^15.7.2",
-    "rc-trigger": "^2.6.5"
-  },
-  "gitHead": "36a9d43be1c5bfea4044ae12ebea59a623dae471"
+	"name": "@sunflower/admin-components",
+	"version": "0.0.1",
+	"description": "基于antd的后台管理组件",
+	"main": "lib/index.js",
+	"module": "lib/index.esm.js",
+	"authors": {
+		"name": "",
+		"email": ""
+	},
+	"files": [
+		"lib",
+		"dist"
+	],
+	"repository": "/@cot/ui",
+	"scripts": {
+		"dev": "umi-lib doc dev",
+		"build": "umi-lib build"
+	},
+	"peerDependencies": {
+		"antd": "^3.20.3",
+		"react": "16.x"
+	},
+	"devDependencies": {
+		"babel-eslint": "8.x",
+		"docz-theme-umi": "^2.0.5",
+		"eslint": "^5.0.0",
+		"postcss-less": "^3.1.4",
+		"umi-library": "^1.1.1"
+	},
+	"license": "MIT",
+	"dependencies": {
+		"@sunflower/core": "^0.0.1",
+		"antd": "^3.20.5",
+		"classnames": "^2.2.6",
+		"moment": "^2.24.0",
+		"prop-types": "^15.7.2",
+		"rc-trigger": "^2.6.5"
+	},
+	"gitHead": "36a9d43be1c5bfea4044ae12ebea59a623dae471"
 }

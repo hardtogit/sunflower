@@ -1,4 +1,15 @@
-module.exports = {
+package.json
+src
+lib
+dist
+README.md
+LICENSE
+    .umirc.library.js
+    .prettierrc
+    .gitignore
+    .prettierignore
+    .eslintrc
+    .doczmodule.exports = {
   extends: [
     'eslint-config-airbnb',
     './rules/base',
