@@ -10,6 +10,6 @@
     "test": "jest",
     "build": "lerna run build",
     "dev": "lerna run dev --parallel",
-    "pub": "lerna publish --from-package"
+    "pub": "lerna publish from-package"
   }
 }
