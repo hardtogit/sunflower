@@ -21,7 +21,7 @@
     "lib"
   ],
   "license": "MIT",
-  "gitHead": "36a9d43be1c5bfea4044ae12ebea59a623dae471",
+  "gitHead": "fdeeb94f1b2b6bd0d4bb0532832323f1e5fa7326",
   "dependencies": {
     "async": "^3.1.0",
     "es6-promise": "^4.2.8",

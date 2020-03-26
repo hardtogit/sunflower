@@ -22,5 +22,6 @@
     "eslint-plugin-react": "^7.3.0"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "gitHead": "fdeeb94f1b2b6bd0d4bb0532832323f1e5fa7326"
 }
