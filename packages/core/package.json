@@ -7,7 +7,7 @@
     "name": "",
     "email": ""
   },
-  "repository": "/@sunflower/core",
+  "repository": "",
   "scripts": {
     "dev": "babel src --out-dir lib --watch",
     "build": "babel src --out-dir lib"
@@ -21,7 +21,6 @@
     "lib"
   ],
   "license": "MIT",
-  "gitHead": "0e6d354b2be38bb603f3f3b29eef5375cfcf3486",
   "dependencies": {
     "async": "^3.1.0",
     "es6-promise": "^4.2.8",

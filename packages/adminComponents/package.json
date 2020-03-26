@@ -12,7 +12,7 @@
 		"lib",
 		"dist"
 	],
-	"repository": "/@cot/admin-components",
+	"repository": "/@sunflower/admin-components",
 	"scripts": {
 		"dev": "umi-lib doc dev",
 		"build": "umi-lib build"
@@ -37,6 +37,5 @@
 		"moment": "^2.24.0",
 		"prop-types": "^15.7.2",
 		"rc-trigger": "^2.6.5"
-	},
-	"gitHead": "0e6d354b2be38bb603f3f3b29eef5375cfcf3486"
+	}
 }
