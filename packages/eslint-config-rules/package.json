@@ -23,5 +23,8 @@
   },
   "author": "",
   "license": "MIT",
-  "gitHead": "5df8eb6287a2b4a9ca9e4ba1adf5ae75dba37cc4"
+  "publishConfig": {
+    "access": "public"
+  },
+  "gitHead": "e8413e598568b33f5bc617bf6b68046a76e38c0d"
 }
