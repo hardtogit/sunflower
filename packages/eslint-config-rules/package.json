@@ -1,5 +1,5 @@
 {
-  "name": "@cot/eslint-config-rules",
+  "name": "@sunflower/eslint-config-rules",
   "version": "0.0.1",
   "description": "",
   "main": "react/index.js",
@@ -23,5 +23,5 @@
   },
   "author": "",
   "license": "ISC",
-  "gitHead": "1f01dc6cef33bd654546d5110e42f893e0aaa33b"
+  "gitHead": "a7f2bb1744bff34780a41d627e58f20095febefd"
 }
