@@ -1,9 +1,30 @@
-import React, { Component, createContext } from 'react';
+import React, { Component } from 'react';
+import { AutoComplete, Input, InputNumber, Tabs, Tag, Icon, Form, Row, Col, Button, Select, DatePicker } from 'antd';
+import PropTypes from 'prop-types';
+import type from '@sunflower/core/lib/utils/type';
 import Trigger from 'rc-trigger';
 import classNames from 'classnames';
-import regionApi$1 from '@cot/core/lib/region';
-import { Tabs, Tag, Icon } from 'antd';
-import regionApi from '@cot/core/lib/region/';
+import regionApi$1 from '@sunflower/core/lib/region';
+import regionApi from '@sunflower/core/lib/region/';
+import _ from 'lodash';
+import { nextTick } from '@sunflower/core/lib/utils/nextTick';
+import moment from 'moment';
+
+function _typeof(obj) {
+  "@babel/helpers - typeof";
+
+  if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+    _typeof = function (obj) {
+      return typeof obj;
+    };
+  } else {
+    _typeof = function (obj) {
+      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+    };
+  }
+
+  return _typeof(obj);
+}
 
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
@@ -79,13 +100,13 @@ function _objectSpread2(target) {
     var source = arguments[i] != null ? arguments[i] : {};
 
     if (i % 2) {
-      ownKeys(source, true).forEach(function (key) {
+      ownKeys(Object(source), true).forEach(function (key) {
         _defineProperty(target, key, source[key]);
       });
     } else if (Object.getOwnPropertyDescriptors) {
       Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
     } else {
-      ownKeys(source).forEach(function (key) {
+      ownKeys(Object(source)).forEach(function (key) {
         Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
       });
     }
@@ -125,6 +146,19 @@ function _setPrototypeOf(o, p) {
   return _setPrototypeOf(o, p);
 }
 
+function _isNativeReflectConstruct() {
+  if (typeof Reflect === "undefined" || !Reflect.construct) return false;
+  if (Reflect.construct.sham) return false;
+  if (typeof Proxy === "function") return true;
+
+  try {
+    Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
 function _assertThisInitialized(self) {
   if (self === void 0) {
     throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
@@ -141,25 +175,272 @@ function _possibleConstructorReturn(self, call) {
   return _assertThisInitialized(self);
 }
 
+function _createSuper(Derived) {
+  return function () {
+    var Super = _getPrototypeOf(Derived),
+        result;
+
+    if (_isNativeReflectConstruct()) {
+      var NewTarget = _getPrototypeOf(this).constructor;
+
+      result = Reflect.construct(Super, arguments, NewTarget);
+    } else {
+      result = Super.apply(this, arguments);
+    }
+
+    return _possibleConstructorReturn(this, result);
+  };
+}
+
 function _toConsumableArray(arr) {
-  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread();
+  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
 }
 
 function _arrayWithoutHoles(arr) {
-  if (Array.isArray(arr)) {
-    for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
-
-    return arr2;
-  }
+  if (Array.isArray(arr)) return _arrayLikeToArray(arr);
 }
 
 function _iterableToArray(iter) {
-  if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter);
+  if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
+}
+
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(n);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+}
+
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+
+  for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
+
+  return arr2;
 }
 
 function _nonIterableSpread() {
-  throw new TypeError("Invalid attempt to spread non-iterable instance");
+  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
+
+var Option = AutoComplete.Option;
+/**
+ * 选择可搜索
+ */
+
+var Index = /*#__PURE__*/function (_Component) {
+  _inherits(Index, _Component);
+
+  var _super = _createSuper(Index);
+
+  _createClass(Index, null, [{
+    key: "getDerivedStateFromProps",
+    value: function getDerivedStateFromProps(props, state) {
+      if ('value' in props) {
+        if (props.value !== state.value) {
+          return {
+            value: props.value
+          };
+        }
+
+        return null;
+      }
+
+      return null;
+    }
+  }]);
+
+  function Index(props) {
+    var _this;
+
+    _classCallCheck(this, Index);
+
+    _this = _super.call(this, props);
+    _this.state = {
+      value: undefined,
+      dataSource: []
+    };
+    _this.timer = null;
+    return _this;
+  }
+
+  _createClass(Index, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var _this2 = this;
+
+      var _this$props = this.props,
+          preload = _this$props.preload,
+          load = _this$props.load,
+          resFilter = _this$props.resFilter;
+
+      if (preload && load) {
+        load().then(function (result) {
+          _this2.setState({
+            dataSource: resFilter ? resFilter(result) : result
+          });
+        });
+      }
+    }
+  }, {
+    key: "handleChange",
+    value: function handleChange(v) {
+      var onChange = this.props.onChange;
+      onChange(v);
+    }
+  }, {
+    key: "handleSearch",
+    value: function handleSearch(key) {
+      var _this3 = this;
+
+      var _this$props2 = this.props,
+          load = _this$props2.load,
+          resFilter = _this$props2.resFilter,
+          linktype = _this$props2.linktype;
+
+      if (key && load) {
+        if (this.timer) {
+          window.clearTimeout(this.timer);
+          this.timer = null;
+        }
+
+        this.timer = window.setTimeout(function () {
+          load(key, linktype).then(function (result) {
+            window.clearTimeout(_this3.timer);
+            _this3.timer = null;
+
+            _this3.setState({
+              dataSource: resFilter ? resFilter(result) : result
+            });
+          });
+        }, 100);
+      }
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this4 = this;
+
+      var dataSource = this.state.dataSource; // console.log('data', dataSource);
+
+      var aProps = _objectSpread2({}, this.props, {
+        onSearch: function onSearch(keyword) {
+          _this4.handleSearch(keyword);
+        },
+        dataSource: dataSource.map(function (_ref) {
+          var key = _ref.key,
+              label = _ref.label;
+          return /*#__PURE__*/React.createElement(Option, {
+            key: key,
+            value: key
+          }, label);
+        }),
+        style: {
+          width: '100%'
+        },
+        onChange: function onChange(v) {
+          return _this4.handleChange(v);
+        }
+      });
+
+      return /*#__PURE__*/React.createElement(AutoComplete, aProps, /*#__PURE__*/React.createElement(Input, aProps.input));
+    }
+  }]);
+
+  return Index;
+}(Component);
+
+var InputNumberGroup = /*#__PURE__*/function (_React$Component) {
+  _inherits(InputNumberGroup, _React$Component);
+
+  var _super = _createSuper(InputNumberGroup);
+
+  function InputNumberGroup(props) {
+    var _this;
+
+    _classCallCheck(this, InputNumberGroup);
+
+    _this = _super.call(this, props);
+
+    _this.handleChange = function (value) {
+      if (!('value' in _this.props)) {
+        _this.setState({
+          value: value
+        });
+      }
+
+      _this.triggerChange(value);
+    };
+
+    _this.triggerChange = function (changedValue) {
+      var onChange = _this.props.onChange;
+
+      if (onChange) {
+        onChange(changedValue);
+      }
+    };
+
+    var _value = !type.isEmpty(props.value) ? props.value : '';
+
+    _this.state = {
+      value: _value
+    };
+    return _this;
+  }
+
+  _createClass(InputNumberGroup, [{
+    key: "componentWillReceiveProps",
+    value: function componentWillReceiveProps(nextProps) {
+      if ('value' in nextProps) {
+        var value = nextProps.value;
+        this.setState({
+          value: value
+        });
+      }
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var state = this.state;
+      var _this$props = this.props,
+          addonAfter = _this$props.addonAfter,
+          addonBefore = _this$props.addonBefore;
+
+      var inputNumberProps = _objectSpread2({}, this.props, {
+        value: state.value,
+        onChange: this.handleChange
+      });
+
+      return /*#__PURE__*/React.createElement("span", {
+        className: "ant-input-group-wrapper"
+      }, /*#__PURE__*/React.createElement("span", {
+        className: "ant-input-wrapper ant-input-group"
+      }, addonBefore && /*#__PURE__*/React.createElement("span", {
+        className: "ant-input-group-addon"
+      }, addonBefore), /*#__PURE__*/React.createElement(InputNumber, _extends({
+        style: {
+          padding: 0
+        },
+        className: "ant-input"
+      }, inputNumberProps)), addonAfter && /*#__PURE__*/React.createElement("span", {
+        className: "ant-input-group-addon"
+      }, addonAfter)));
+    }
+  }]);
+
+  return InputNumberGroup;
+}(React.Component);
+
+InputNumberGroup.defaultProps = {
+  addonBefore: '',
+  addonAfter: ''
+};
+InputNumberGroup.propTypes = {
+  addonBefore: PropTypes.string,
+  addonAfter: PropTypes.string
+}; // InputNumberGroup.Scope = Scope;
 
 function styleInject(css, ref) {
   if ( ref === void 0 ) ref = {};
@@ -202,17 +483,17 @@ var tabActiveStyle = {
   borderColor: 'transparent'
 };
 
-var Index =
-/*#__PURE__*/
-function (_React$Component) {
+var Index$1 = /*#__PURE__*/function (_React$Component) {
   _inherits(Index, _React$Component);
+
+  var _super = _createSuper(Index);
 
   function Index(props) {
     var _this;
 
     _classCallCheck(this, Index);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(Index).call(this, props));
+    _this = _super.call(this, props);
 
     _this.handleChoice = function (value, type) {
       var _this$props = _this.props,
@@ -306,9 +587,9 @@ function (_React$Component) {
           cityId = _this$state.cityId,
           areaId = _this$state.areaId;
       var regionType = this.props.regionType;
-      return React.createElement("div", {
+      return /*#__PURE__*/React.createElement("div", {
         className: "cityPicker"
-      }, React.createElement(Tabs, {
+      }, /*#__PURE__*/React.createElement(Tabs, {
         defaultActiveKey: "province",
         activeKey: activeKey,
         size: "small",
@@ -316,42 +597,42 @@ function (_React$Component) {
           marginBottom: '0'
         },
         onTabClick: this.handleTabClick
-      }, React.createElement(TabPane, {
+      }, /*#__PURE__*/React.createElement(TabPane, {
         tab: "\u7701",
         key: "province",
         style: {
           padding: '4px 10px 10px 10px'
         }
       }, provinceList.map(function (value) {
-        return React.createElement(Tag, {
+        return /*#__PURE__*/React.createElement(Tag, {
           style: value.id === provinceId ? _objectSpread2({}, tabStyle, {}, tabActiveStyle) : tabStyle,
           key: value.id,
           onClick: function onClick() {
             return _this2.handleChoice(value, 'province');
           }
         }, value.name);
-      })), (regionType === 'area' || regionType === 'city') && React.createElement(TabPane, {
+      })), (regionType === 'area' || regionType === 'city') && /*#__PURE__*/React.createElement(TabPane, {
         tab: "\u5E02",
         key: "city",
         style: {
           padding: '4px 10px 10px 10px'
         }
       }, cityList.map(function (value) {
-        return React.createElement(Tag, {
+        return /*#__PURE__*/React.createElement(Tag, {
           style: value.id === cityId ? _objectSpread2({}, tabStyle, {}, tabActiveStyle) : tabStyle,
           key: value.id,
           onClick: function onClick() {
             return _this2.handleChoice(value, 'city');
           }
         }, value.name);
-      })), regionType === 'area' && React.createElement(TabPane, {
+      })), regionType === 'area' && /*#__PURE__*/React.createElement(TabPane, {
         tab: "\u533A",
         key: "area",
         style: {
           padding: '4px 10px 10px 10px'
         }
       }, areaList.map(function (value) {
-        return React.createElement(Tag, {
+        return /*#__PURE__*/React.createElement(Tag, {
           style: value.id === areaId ? _objectSpread2({}, tabStyle, {}, tabActiveStyle) : tabStyle,
           key: value.id,
           onClick: function onClick() {
@@ -365,19 +646,17 @@ function (_React$Component) {
   return Index;
 }(React.Component);
 
-var ContainerContext = React.createContext('');
+var Index$2 = /*#__PURE__*/function (_React$Component) {
+  _inherits(Index, _React$Component);
 
-var Index$1 =
-/*#__PURE__*/
-function (_React$Component) {
-  _inherits(Index$1, _React$Component);
+  var _super = _createSuper(Index);
 
-  function Index$1(props) {
+  function Index(props) {
     var _this;
 
-    _classCallCheck(this, Index$1);
+    _classCallCheck(this, Index);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(Index$1).call(this, props));
+    _this = _super.call(this, props);
 
     _this.handleRemove = function (id) {
       var value = _this.state.value;
@@ -501,7 +780,7 @@ function (_React$Component) {
     return _this;
   }
 
-  _createClass(Index$1, [{
+  _createClass(Index, [{
     key: "componentWillReceiveProps",
     value: function componentWillReceiveProps(nextProps) {
       var _this$props3 = this.props,
@@ -548,62 +827,60 @@ function (_React$Component) {
         }
       }
 
-      return React.createElement(ContainerContext.Consumer, null, function (fn) {
-        return React.createElement(Trigger, _extends({}, _this2.props, {
-          action: ['click'],
-          popup: React.createElement(Index, _extends({}, _this2.props, {
-            triggerSelect: _this2.triggerSelect,
-            handleSelect: _this2.handleSelect
-          })),
-          popupVisible: visible,
-          destroyPopupOnHide: true // getPopupContainer={fn ||()=>{return document.getElementsByTagName('body')[0];}}
-          ,
-          popupStyle: {
-            zIndex: 1050,
-            width: '300px'
-          },
-          onPopupVisibleChange: _this2.handleDropdownVisibleChange,
-          popupAlign: {
-            points: ['tl', 'bl'],
-            offset: [0, 3]
-          }
-        }), React.createElement("div", {
-          onClick: _this2.triggerSelect,
-          className: classNames(['ant-select', disabled ? 'ant-select-disabled' : 'ant-select-enabled']),
-          style: {
-            width: '100%'
-          }
-        }, React.createElement("div", {
-          className: "ant-select-selection ant-select-selection--multiple"
-        }, React.createElement("div", {
-          className: "ant-select-selection__rendered"
-        }, (!value || value.length === 0) && React.createElement("div", {
-          className: "ant-select-selection__placeholder"
-        }, "\u8BF7\u9009\u62E9\u5730\u5740"), React.createElement("ul", null, regionData.map(function (value, index) {
-          return React.createElement("li", {
-            key: index,
-            className: "ant-select-selection__choice"
-          }, React.createElement("div", {
-            className: "ant-select-selection__choice__content"
-          }, value.name), React.createElement("div", {
-            className: "ant-select-selection__choice__remove",
-            onClick: function onClick(e) {
-              e.stopPropagation();
+      return /*#__PURE__*/React.createElement(Trigger, _extends({}, this.props, {
+        action: ['click'],
+        popup: /*#__PURE__*/React.createElement(Index$1, _extends({}, this.props, {
+          triggerSelect: this.triggerSelect,
+          handleSelect: this.handleSelect
+        })),
+        popupVisible: visible,
+        destroyPopupOnHide: true // getPopupContainer={fn ||()=>{return document.getElementsByTagName('body')[0];}}
+        ,
+        popupStyle: {
+          zIndex: 1050,
+          width: '300px'
+        },
+        onPopupVisibleChange: this.handleDropdownVisibleChange,
+        popupAlign: {
+          points: ['tl', 'bl'],
+          offset: [0, 3]
+        }
+      }), /*#__PURE__*/React.createElement("div", {
+        onClick: this.triggerSelect,
+        className: classNames(['ant-select', disabled ? 'ant-select-disabled' : 'ant-select-enabled']),
+        style: {
+          width: '100%'
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "ant-select-selection ant-select-selection--multiple"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "ant-select-selection__rendered"
+      }, (!value || value.length === 0) && /*#__PURE__*/React.createElement("div", {
+        className: "ant-select-selection__placeholder"
+      }, "\u8BF7\u9009\u62E9\u5730\u5740"), /*#__PURE__*/React.createElement("ul", null, regionData.map(function (value, index) {
+        return /*#__PURE__*/React.createElement("li", {
+          key: index,
+          className: "ant-select-selection__choice"
+        }, /*#__PURE__*/React.createElement("div", {
+          className: "ant-select-selection__choice__content"
+        }, value.name), /*#__PURE__*/React.createElement("div", {
+          className: "ant-select-selection__choice__remove",
+          onClick: function onClick(e) {
+            e.stopPropagation();
 
-              _this2.handleRemove(value.id);
-            }
-          }, React.createElement(Icon, {
-            type: "close"
-          })));
-        }))))));
-      });
+            _this2.handleRemove(value.id);
+          }
+        }, /*#__PURE__*/React.createElement(Icon, {
+          type: "close"
+        })));
+      }))))));
     }
   }]);
 
-  return Index$1;
+  return Index;
 }(React.Component);
 
-Index$1.defaultProps = {
+Index$2.defaultProps = {
   disabled: false,
   // 是否禁用
   multiple: false,
@@ -613,324 +890,655 @@ Index$1.defaultProps = {
   simple: true // 支持 simple true返回id或id组成的数组，false返回区域对象或区域对象组成的数组
 
 };
-Index$1.formatRegion = regionApi$1.formatRegion;
+Index$2.formatRegion = regionApi$1.formatRegion;
 
-var css$1 = ".Page-module_contentInner__1grgj {\n  background: #e8eaed;\n  height: calc(100vh - 64px);\n  position: relative;\n  background-color: #fff;\n  overflow-y: auto;\n  overflow-x: hidden;\n}\n.Page-module_containerOut__3bj2f {\n  padding: 15px 20px;\n}\n.Page-module_listPage-searchBar__-tl9d {\n  border: 1px solid #ddd;\n  padding: 24px 0 0 0;\n}\n.Page-module_listPage-table__3AQhC {\n  margin-top: 24px;\n}\n@media (max-width: 767px) {\n  .Page-module_contentInner__1grgj {\n    padding: 12px;\n    min-height: calc(100vh - 160px);\n    background-color: #eaecef;\n  }\n}\n";
-styleInject(css$1);
+var _require = require("tapable"),
+    SyncHook = _require.SyncHook,
+    SyncBailHook = _require.SyncBailHook,
+    SyncWaterfallHook = _require.SyncWaterfallHook,
+    AsyncSeriesHook = _require.AsyncSeriesHook;
 
-var Page =
-/*#__PURE__*/
-function (_Component) {
-  _inherits(Page, _Component);
+var FormItem = Form.Item;
+var itemLayout = {
+  itemCol: {
+    xxl: {
+      span: 6
+    },
+    xl: {
+      span: 8
+    },
+    md: {
+      span: 12
+    }
+  },
+  labelCol: {
+    span: 6
+  },
+  wrapperCol: {
+    span: 16
+  }
+};
+/**
+ * 表单构建器
+ */
 
-  function Page(props) {
-    var _this;
+var Compiler = /*#__PURE__*/function () {
+  function Compiler() {
+    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-    _classCallCheck(this, Page);
+    _classCallCheck(this, Compiler);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(Page).call(this, props));
-    _this.state = {};
-    return _this;
+    this.hooks = {
+      // 配置修改可以传递
+      config: new SyncWaterfallHook(['fields']),
+      install: new SyncHook(['fieldTypes']),
+      make: new SyncHook(['elements', 'btnElements']),
+      layout: new SyncBailHook(['formEles', 'elements', 'btns']),
+      change: new SyncWaterfallHook(['prop', 'val', 'values']),
+      validator: new AsyncSeriesHook(['form']),
+      submit: new SyncWaterfallHook(['source', 'values']),
+      rev: new SyncHook(['values']),
+      more: new SyncHook(['type'])
+    }; // 格式化配置参数
+
+    this.fields = options.fields;
+    this.btns = options.btns || [];
+    this.fieldTypes = {};
+    this.plugins = options.plugins || [];
+    this.elements = [];
+    this.btnElements = [];
+    this.formEles = null;
+    this.form = options.form;
+    this.num = options.num;
+    this.more = options.more;
+    this.moreType = true;
+    this.btnColLayout = options.btnColLayout;
+
+    this.layoutFn = options.layoutFn || function (r) {
+      return r;
+    };
   }
 
-  _createClass(Page, [{
-    key: "render",
-    value: function render() {
-      var _this$props = this.props,
-          className = _this$props.className,
-          children = _this$props.children,
-          _this$props$loading = _this$props.loading,
-          loading = _this$props$loading === void 0 ? false : _this$props$loading,
-          _this$props$inner = _this$props.inner,
-          inner = _this$props$inner === void 0 ? false : _this$props$inner,
-          _this$props$out = _this$props.out,
-          out = _this$props$out === void 0 ? true : _this$props$out;
-      var loadingStyle = {
-        height: 'calc(100vh - 185px)',
-        overflow: 'hidden'
-      }; // console.log(this.props, styles);
+  _createClass(Compiler, [{
+    key: "install",
+    value: function install() {
+      var _this = this;
 
-      return React.createElement("div", {
-        className: classNames(className, {
-          contentInner: inner,
-          containerOut: inner && out
-        }),
-        style: loading ? loadingStyle : null
-      }, children);
-    }
-  }]);
-
-  return Page;
-}(Component);
-
-var css$2 = "html,\nbody,\n#root {\n  height: 100%;\n}\n.mt20 {\n  margin-top: 20px;\n}\n.mt10 {\n  margin-top: 10px;\n}\n.mb20 {\n  margin-bottom: 20px;\n}\n.mll0 {\n  margin-left: 10px;\n}\n.ml20 {\n  margin-left: 20px;\n}\n.mr20 {\n  margin-right: 20px;\n}\n.fl {\n  float: left;\n}\n.fr {\n  float: right;\n}\n.actions {\n  margin-bottom: 8px;\n}\n.actions button {\n  margin-right: 5px;\n}\n.text-editor .ant-form-item-control {\n  line-height: normal!important;\n}\n.rc-tree-select {\n  width: 100% !important;\n}\n.rc-tree-select-selection {\n  min-height: 32px;\n  line-height: 32px;\n  border-radius: 4px !important;\n}\n.has-error .rc-tree-select-selection {\n  border-color: #f5222d;\n}\n.ant-breadcrumb {\n  display: none;\n}\n.ant-select-selection--multiple {\n  -ms-overflow-style: none;\n  overflow: -moz-scrollbars-none;\n}\n.ant-select-selection--multiple::-webkit-scrollbar {\n  width: 0 !important;\n  height: 0;\n}\n {\n  background-color: #eee;\n}\n.rc-tree-select-selection--multiple {\n  line-height: 32px;\n  border-radius: 4px;\n}\n.ant-select-tree {\n  height: 200px;\n}\n.index-module_contextMenu__2knql {\n  position: fixed;\n  z-index: 100;\n  left: 200px;\n  padding: 8px 0px;\n  top: 100px;\n  background-color: #fff;\n  border: 1px solid #ddd;\n}\n.index-module_contextMenu__2knql ul {\n  list-style: none;\n  margin: 0;\n  padding: 0;\n}\n.index-module_contextMenu__2knql ul li {\n  font-size: 12px;\n  line-height: 24px;\n  padding: 0 12px;\n}\n.index-module_contextMenu__2knql ul li:hover {\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  background-color: #ddd;\n}\n";
-styleInject(css$2);
-
-var TabPane$1 = Tabs.TabPane;
-var tabContext = createContext({
-  remove: function remove() {}
-});
-
-var TabLayout =
-/*#__PURE__*/
-function (_React$Component) {
-  _inherits(TabLayout, _React$Component);
-
-  _createClass(TabLayout, null, [{
-    key: "getDerivedStateFromProps",
-    // 更新tab
-    value: function getDerivedStateFromProps(nextProps, state) {
-      var panes = state.panes;
-      var location = nextProps.location,
-          content = nextProps.content,
-          menuMapKeys = nextProps.menuMapKeys,
-          getMenuPath = nextProps.getMenuPath;
-      var path = getMenuPath(location.pathname);
-      var currentMenu = menuMapKeys.get(path);
-
-      if (currentMenu.key === state.activeKey) {
-        return null;
-      }
-
-      if (state.panes.get(currentMenu.key)) {
-        var it = state.panes.get(currentMenu.key);
-        state.panes.set(currentMenu.key, _objectSpread2({}, it, {
-          pathname: location.pathname
-        }));
-        return {
-          activeKey: currentMenu.key
-        };
-      }
-
-      return {
-        panes: panes.set(currentMenu.key, _objectSpread2({}, currentMenu, {
-          content: content,
-          pathname: location.pathname
-        })),
-        activeKey: currentMenu.key
-      };
-    }
-  }]);
-
-  function TabLayout(props) {
-    var _this;
-
-    _classCallCheck(this, TabLayout);
-
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(TabLayout).call(this, props));
-
-    _this.onChange = function (activeKey) {
-      var menu = _this.state.panes.get(activeKey);
-
-      _this.props.push(menu.pathname);
-    };
-
-    _this.onEdit = function (targetKey, action) {
-      _this[action](targetKey);
-    };
-
-    _this.onContextMenu = function (e, DefaultTabBarProps) {
-      // const { panes} = this.state;
-      // console.log(DefaultTabBarProps);
-      _this.opKey = DefaultTabBarProps.key;
-      e.preventDefault();
-      _this.contextMenuLeft = e.clientX;
-      _this.contextMenuTop = e.clientY;
-
-      _this.setState({
-        contextMenu: true
-      });
-    };
-
-    _this.reLoad = function (panes) {
-      // console.error(this.opKey, panes.get(this.opKey));
-      // return ;
-      var getCurrentMenu = _this.props.getCurrentMenu;
-      panes.set(_this.opKey, _objectSpread2({}, panes.get(_this.opKey), {
-        content: React.createElement("div", null)
-      }));
-
-      _this.setState({
-        panes: panes
-      });
-
-      var menu = getCurrentMenu(_this.opKey);
-
-      var CurrentComponent = function CurrentComponent() {
-        return React.createElement("div", null);
-      };
-
-      _this.props.route.routes.forEach(function (item) {
-        if (menu.path === item.path) {
-          CurrentComponent = item.component;
-        }
-      });
-
-      setTimeout(function () {
-        panes.set(_this.opKey, _objectSpread2({}, panes.get(_this.opKey), {
-          content: React.createElement(CurrentComponent, null)
-        }));
-
-        _this.setState({
-          panes: panes
+      if (Array.isArray(this.plugins) && this.plugins.length > 0) {
+        this.plugins.forEach(function (plugins) {
+          if (typeof plugins === 'function') {
+            plugins(_this);
+          } else if (_typeof(plugins) === 'object') {
+            plugins.apply && plugins.apply(_this);
+          }
         });
-      }, 0);
-    };
-
-    _this.closeTab = function (type) {
-      var _this$state = _this.state,
-          panes = _this$state.panes,
-          activeKey = _this$state.activeKey;
-
-      var keyArr = _toConsumableArray(panes.keys());
-
-      var deleteKey = [];
-
-      if (type === 'left') {
-        deleteKey = keyArr.slice(0, keyArr.indexOf(_this.opKey));
-      } else {
-        deleteKey = keyArr.slice(keyArr.indexOf(_this.opKey) + 1, keyArr.length + 1);
       }
 
-      deleteKey = deleteKey.filter(function (key) {
-        return key !== activeKey;
-      });
-      deleteKey.forEach(function (key) {
-        panes.delete(key);
-      });
+      this.fields = this.hooks.config.call(this.fields); // this.num || ( this.num= this.fields.length);
 
-      _this.setState({
-        panes: panes
-      });
-    };
-
-    _this.remove = function (targetKey) {
-      var _this$state2 = _this.state,
-          panes = _this$state2.panes,
-          activeKey = _this$state2.activeKey;
-      var push = _this.props.push;
-      var nextKey = activeKey;
-      panes.delete(targetKey);
-      var len = panes.size; // let last
-
-      if (activeKey === targetKey && len > 0) {
-        nextKey = Array.from(panes.keys())[len - 1];
-      } else if (len === 0) {
-        return push('/');
-      }
-
-      var menu = panes.get(nextKey);
-      push(menu.pathname);
-      return _assertThisInitialized(_this);
-    };
-
-    _this.findTab = function (key) {
-      return _this.state.panes.get(key);
-    };
-
-    _this.state = {
-      panes: new Map(),
-      contextMenu: false
-    };
-    _this.contextMenuLeft = 0;
-    _this.contextMenuTop = 0;
-    _this.opKey = '';
-    return _this;
-  }
-
-  _createClass(TabLayout, [{
-    key: "componentDidMount",
-    value: function componentDidMount() {
+      this.hooks.install.call(this.fieldTypes);
+    }
+  }, {
+    key: "handle",
+    value: function handle(source, noValidator) {
       var _this2 = this;
 
-      window.addEventListener('click', function () {
-        if (_this2.state.contextMenu) {
-          _this2.setState({
-            contextMenu: false
-          });
+      // 所有的按钮提交必须走表单验证
+      // 重置 不走表单验证
+      if (source === 'Reset' || noValidator) {
+        source === 'Reset' && this.form.resetFields();
+        this.hooks.submit.call(source, this.form.getFieldsValue());
+        return;
+      }
+
+      this.hooks.validator.callAsync(this.form, function (err) {
+        if (!err) {
+          _this2.hooks.submit.call(source, _this2.form.getFieldsValue());
         }
       });
     }
   }, {
-    key: "componentWillUnmount",
-    value: function componentWillUnmount() {
+    key: "layout",
+    value: function layout() {
       var _this3 = this;
 
-      window.removeEventListener('click', function () {
-        _this3.setState({
-          contextMenu: false
+      // 最初的元素集合
+      var elements = this.elements;
+      console.log(elements);
+      var btnElements = this.btnElements;
+      var getFieldDecorator = this.form.getFieldDecorator;
+      var dfStyle = {
+        marginLeft: '9px'
+      };
+
+      var btnColLayout = this.btnColLayout || _objectSpread2({}, itemLayout.itemCol, {}, elements[0].field.ColLayout); // let visDom;
+
+
+      if (elements.length) {
+        this.formEles = /*#__PURE__*/React.createElement(Form, null, /*#__PURE__*/React.createElement(Row, null, (!(this.more && this.moreType) ? elements : elements.slice(0, this.num)).map(function (_ref) {
+          var ele = _ref.ele,
+              field = _ref.field;
+
+          var colLayout = _objectSpread2({}, itemLayout.itemCol, {}, field.ColLayout);
+
+          var span = parseInt(24 / ele.length, 10);
+          var layoutFn = field.layoutFn || _this3.layoutFn;
+          return /*#__PURE__*/React.createElement(Col, _extends({}, colLayout, {
+            key: Array.isArray(field.key) ? field.key.join(',') : field.key
+          }), !Array.isArray(ele) ? /*#__PURE__*/React.createElement(FormItem, _extends({
+            label: field.name
+          }, layoutFn(itemLayout)), getFieldDecorator(field.key, _objectSpread2({}, field.formItemProps || {}))(ele)) : /*#__PURE__*/React.createElement(FormItem, _extends({
+            label: field.name
+          }, layoutFn(itemLayout)), /*#__PURE__*/React.createElement(Row, null, ele.map(function (it, idx) {
+            return /*#__PURE__*/React.createElement(Col, {
+              span: span,
+              key: field.key[idx]
+            }, getFieldDecorator(field.key[idx], {
+              initialValue: field.initialValue[idx] || undefined,
+              rules: field.rules[idx] || []
+            })(it));
+          }))));
+        }), this.more && /*#__PURE__*/React.createElement(Col, {
+          span: 24
+        }, /*#__PURE__*/React.createElement("div", {
+          style: {
+            textAlign: 'right',
+            paddingRight: 40
+          }
+        }, /*#__PURE__*/React.createElement(Button, {
+          type: "link",
+          onClick: function onClick() {
+            return _this3.hooks.more.call(_this3.moreType);
+          }
+        }, /*#__PURE__*/React.createElement(Icon, {
+          type: this.moreType ? 'down' : 'up'
+        }), " ", this.moreType ? '更多条件' : '收起'))), /*#__PURE__*/React.createElement(Col, btnColLayout, /*#__PURE__*/React.createElement(Row, btnColLayout && btnColLayout.rows, /*#__PURE__*/React.createElement(Col, _extends({
+          offset: btnColLayout.offSetSpan || btnColLayout.offSetSpan === 0 ? btnColLayout.offSetSpan : itemLayout.labelCol.span,
+          style: {
+            marginBottom: '24px'
+          }
+        }, btnColLayout && btnColLayout.cols), // btns
+        btnElements.map(function (_ref2, idx) {
+          var type = _ref2.type,
+              style = _ref2.style,
+              source = _ref2.source,
+              title = _ref2.title,
+              noValidator = _ref2.noValidator;
+          var btnPros = {
+            type: type,
+            onClick: function onClick() {
+              return _this3.handle(source, noValidator);
+            },
+            style: style
+          };
+          return /*#__PURE__*/React.createElement(Button, _extends({}, btnPros, {
+            style: _objectSpread2({}, idx !== 0 ? dfStyle : {}, {}, style),
+            key: source
+          }), title);
+        }))))));
+      } // 布局交给用户自己去整理
+
+
+      var layout = this.hooks.layout.call(this.formEles, this.elements, this.btnElements);
+      return layout || this.formEles;
+    }
+  }, {
+    key: "make",
+    value: function make() {
+      var _this4 = this;
+
+      var fieldTypes = this.fieldTypes;
+      var fields = this.fields;
+      var btns = this.btns;
+
+      if (fields.length) {
+        fields.forEach(function (field) {
+          field.onChange = function (args) {
+            nextTick(function () {
+              _this4.hooks.change.call(field.key, args, _this4.form.getFieldsValue());
+            });
+          };
+
+          console.log(fieldTypes);
+
+          _this4.elements.push({
+            ele: Array.isArray(field.type) ? field.type.map(function (type, idx) {
+              return fieldTypes[type](_objectSpread2({}, field, {
+                placeholder: field.placeholders[idx]
+              }));
+            }) : fieldTypes[field.type](field),
+            native: fieldTypes[field.type],
+            field: field,
+            group: field.group
+          });
         });
+      }
+
+      if (btns.length) {
+        btns.forEach(function (_ref3) {
+          var type = _ref3.type,
+              source = _ref3.source,
+              style = _ref3.style,
+              title = _ref3.title,
+              noValidator = _ref3.noValidator;
+
+          _this4.btnElements.push({
+            type: type,
+            source: source,
+            style: style,
+            title: title,
+            noValidator: noValidator
+          });
+        });
+      }
+
+      this.hooks.make.call(this.elements, this.btnElements);
+    }
+  }, {
+    key: "run",
+    value: function run() {
+      return this.layout();
+    }
+  }]);
+
+  return Compiler;
+}();
+
+var Format = {
+  DATE: 'YYYY-MM-DD',
+  DATETIME: 'YYYY-MM-DD HH:mm:ss',
+  TIME: 'HH:mm:ss',
+  MONTH: 'YYYY-MM'
+}; // 支持格式 moment、date、时间戳(数值或者number)、IOS9601/RFC2822日期格式
+
+function toMoment(value, format) {
+  var momentValue;
+
+  var isNumber = _.isNumber(value);
+
+  var isMoment = moment.isMoment(value);
+
+  var isString = _.isString(value);
+
+  var isNotNaN = !_.isNaN(value);
+  var isDate = value instanceof Date;
+  var isDefaultFormat = Object.values(Format).includes(format); // 忽略[]或{}的情况
+
+  if (!value && _.isEmpty(value)) return null;
+
+  if (isMoment) {
+    momentValue = value;
+  } else if (isDate || isNumber) {
+    momentValue = moment(value);
+  } else if (isString && isNotNaN && isDefaultFormat) {
+    // 判断isDefaultFormat 主要是为了避免格式为数字型format时，也被强转为number，比如: 2012.12
+    momentValue = moment(parseInt(value, 10));
+  } else {
+    momentValue = moment(value, format);
+  }
+
+  return momentValue.isValid() ? momentValue : null;
+}
+/**
+ * 配置参数的格式化 z
+ * 主要是针对fields
+ * @param {*} compiler
+ */
+
+
+function formate(compiler) {
+  compiler.hooks.config.tap('FieldsFormate', function () {
+    var fields = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+    return fields.map(function (field) {
+      // 如果不给type 默认text
+      field.type = field.type || 'text';
+
+      if ((field.type === 'date' || field.type === 'month') && field.initialValue) {
+        field.initialValue = toMoment(field.initialValue);
+      } else if (field.type === 'dateRange' && Array.isArray(field.initialValue)) {
+        field.initialValue = field.initialValue.map(function (it) {
+          return toMoment(it);
+        });
+      }
+
+      return field;
+    });
+  });
+}
+
+var Option$1 = Select.Option;
+
+function getPlaceholder(_ref) {
+  var type = _ref.type,
+      name = _ref.name;
+  var dot = '';
+
+  switch (type) {
+    case 'select':
+    case 'date':
+    case 'enum':
+    case 'dateRange':
+    default:
+      dot = '输入';
+      break;
+  }
+
+  return "\u8BF7".concat(dot).concat(name);
+}
+
+var elementTypePlugin = /*#__PURE__*/function () {
+  function elementTypePlugin() {
+    _classCallCheck(this, elementTypePlugin);
+
+    this.options = {
+      text: function text(field) {
+        return /*#__PURE__*/React.createElement(Input, _extends({
+          placeholder: getPlaceholder(field)
+        }, field.fieldProps));
+      },
+      textarea: function textarea(field) {
+        return /*#__PURE__*/React.createElement(Input.TextArea, _extends({
+          placeholder: getPlaceholder(field)
+        }, field.fieldProps));
+      },
+      number: function number(field) {
+        return /*#__PURE__*/React.createElement(InputNumber, _extends({
+          placeholder: getPlaceholder(field),
+          style: {
+            width: '100%'
+          }
+        }, field.fieldProps));
+      },
+      dateRange: function dateRange(field) {
+        return /*#__PURE__*/React.createElement(DatePicker.RangePicker, field.fieldProps);
+      },
+      date: function date(field) {
+        return /*#__PURE__*/React.createElement(DatePicker, _extends({
+          placeholder: getPlaceholder(field)
+        }, field.fieldProps));
+      },
+      month: function month(field) {
+        return /*#__PURE__*/React.createElement(DatePicker.MonthPicker, _extends({
+          placeholder: getPlaceholder(field)
+        }, field.fieldProps));
+      },
+      enum: function _enum(field) {
+        var options = [];
+        field.enums && Object.keys(field.enums).forEach(function (key) {
+          if (field.enums[key] === '全部') {
+            options.unshift( /*#__PURE__*/React.createElement(Option$1, {
+              value: key,
+              key: key
+            }, " ", field.enums[key]));
+          } else {
+            options.push( /*#__PURE__*/React.createElement(Option$1, {
+              value: key,
+              key: key
+            }, " ", field.enums[key]));
+          }
+        });
+        return /*#__PURE__*/React.createElement(Select, _extends({
+          style: {
+            width: '100%'
+          },
+          placeholder: getPlaceholder(field)
+        }, field.fieldProps), options);
+      }
+    };
+  }
+
+  _createClass(elementTypePlugin, [{
+    key: "apply",
+    value: function apply(compiler) {
+      var _this = this;
+
+      compiler.hooks.install.tap('ElementTypePugin', function (fieldsTypes) {
+        Object.keys(_this.options).forEach(function (type) {
+          fieldsTypes[type] = function (field) {
+            // 自动添加onChange监听 触发change hook 帮助联动性处理
+            var fieldCopy = _objectSpread2({}, field);
+
+            delete fieldCopy.ColLayout;
+            return _this.options[type](fieldCopy);
+          };
+        });
+      });
+    }
+  }]);
+
+  return elementTypePlugin;
+}();
+
+/**
+ * 验证插件
+ */
+function validatorPlugin(compiler) {
+  compiler.hooks.validator.tapAsync('validatorPlugin', function (form, callback) {
+    form.validateFieldsAndScroll(function (err, values) {
+      callback(err, values);
+    });
+  });
+}
+function extraRulePlugin(compiler) {
+  var form = compiler.form;
+  compiler.hooks.config.tap('extraRulePlugin', function (fileds) {
+    return fileds.map(function (field) {
+      if (field.extraRule && field.rules && field.rules.length > 0) {
+        field.rules.forEach(function (vl) {
+          if (vl.validator) {
+            var oldFn = vl.validator;
+
+            vl.validator = function (rule, value, callback) {
+              oldFn(rule, value, callback, form);
+            };
+          }
+        });
+      }
+
+      return field;
+    });
+  });
+}
+
+var Patter = 'YYYY-MM-DD HH:mm:ss';
+var BeginPatter = 'YYYY-MM-DD 00:00:00';
+var EndPatter = 'YYYY-MM-DD 23:59:59'; // const Ratter = 'YYYY-MM-DD';
+
+var Mpatter = 'YYYY-MM';
+var Factory = {
+  date: function date(val) {
+    return val.format(Patter);
+  },
+  dateRange: function dateRange(val) {
+    return val.map(function (v, i) {
+      return i === 0 ? "".concat(v.format(BeginPatter)) : "".concat(v.format(EndPatter));
+    });
+  },
+  month: function month(val) {
+    return val.format(Mpatter);
+  } // cityPicker: val=>
+
+};
+/**
+ * 格式化参数
+ * @param {*} compier
+ */
+
+function formteParamPugin(compier) {
+  compier.hooks.submit.tap('formteParamPugin', function (source, values) {
+    if (!values) return {
+      source: source
+    };
+    var fieldsMap = compier.fields.reduce(function (p, v) {
+      p[v.key] = v;
+      return p;
+    }, {});
+    return {
+      source: source,
+      values: Object.keys(values).reduce(function (prev, next) {
+        var field = fieldsMap[next];
+
+        if (field && Factory[field.type] && values[next]) {
+          prev[next] = Factory[field.type](values[next]);
+        } else {
+          prev[next] = values[next];
+        }
+
+        return prev;
+      }, {})
+    };
+  });
+}
+
+/**
+ * 干掉查询空格
+ */
+
+function trimStringPugin(compiler) {
+  compiler.hooks.submit.tap('trimStringPugin', function (target) {
+    if (!target.values) {
+      return target;
+    }
+
+    Object.keys(target.values).forEach(function (key) {
+      var val = target.values[key];
+
+      if (val && typeof val === 'string') {
+        target.values[key] = val.trim();
+      }
+    });
+    return target;
+  });
+}
+/**
+ * 干掉参数中存在的 为空的参数
+ * @param {} compiler
+ */
+
+function trimParamPugin(compiler) {
+  compiler.hooks.submit.tap('trimParamPugin', function (target) {
+    if (!target.values) {
+      return target;
+    }
+
+    Object.keys(target.values).forEach(function (key) {
+      var val = target.values[key];
+
+      if (_.isEmpty(val) || Array.isArray(val) && val.length === 0) {
+        delete target.values[key];
+      }
+    });
+    return target;
+  });
+}
+
+function moreQueryPlugins(compiler) {
+  compiler.hooks.more.tap('moreQueryPlugins', function (type) {
+    compiler.moreType = !type;
+    compiler.hooks.submit.call('MoreQuery');
+  });
+}
+
+/**
+ * 插件集合
+ */
+
+var plugins = [extraRulePlugin, formate, new elementTypePlugin(), validatorPlugin, formteParamPugin, trimStringPugin, trimParamPugin, moreQueryPlugins];
+
+var _dec, _class;
+/**
+ * 统一表单生成器
+ */
+
+var FormHook = (_dec = Form.create(), _dec(_class = /*#__PURE__*/function (_React$Component) {
+  _inherits(FormHook, _React$Component);
+
+  var _super = _createSuper(FormHook);
+
+  function FormHook(props) {
+    var _this;
+
+    _classCallCheck(this, FormHook);
+
+    _this = _super.call(this, props);
+    _this.compiler = new Compiler({
+      fields: props.fields,
+      btns: props.btns,
+      form: props.form,
+      plugins: [].concat(_toConsumableArray(plugins), _toConsumableArray(props.plugins || [])),
+      num: props.num,
+      more: props.more,
+      btnColLayout: props.btnColLayout,
+      layoutFn: props.layoutFn
+    });
+    _this.state = {
+      type: true
+    };
+    return _this;
+  }
+
+  _createClass(FormHook, [{
+    key: "componentWillMount",
+    value: function componentWillMount() {
+      this.compiler.install();
+      this.compiler.make();
+      this.handle();
+    }
+  }, {
+    key: "componentWillReceiveProps",
+    value: function componentWillReceiveProps(nextProps) {
+      // 接受处理给表单设置值
+      // console.log(nextProps.search,);
+      var search = nextProps.search;
+
+      if (!!search && Object.keys(search).length > 0 && this.props.search !== search && !_.isEqual(this.props.search, search)) {
+        // const values = form.getFieldsValue();
+        // if (!looseEqual(search, values)) {
+        // 当 search 和 values 不相等 才有赋值的
+        // 这里不再进行form的value和当前 search的比较 如果需要判断将这块逻辑纳入到插件
+        this.compiler.hooks.rev.call(search); // }
+      }
+    }
+  }, {
+    key: "handle",
+    value: function handle() {
+      var _this2 = this;
+
+      var _this$props = this.props,
+          onSearch = _this$props.onSearch,
+          handler = _this$props.handler;
+      var compiler = this.compiler; // 将表单的按钮回调全部返回回去
+
+      compiler.hooks.submit.tap('CallBack', function (_ref) {
+        var source = _ref.source,
+            values = _ref.values;
+
+        if (source === 'Submit' || source === 'Reset') {
+          onSearch(values, source);
+        } else if (source === 'MoreQuery') {
+          _this2.setState({
+            type: !_this2.state.type
+          });
+        } else {
+          handler(source, values);
+        }
       });
     }
   }, {
     key: "render",
     value: function render() {
-      var _this4 = this;
-
-      var _this$state3 = this.state,
-          panes = _this$state3.panes,
-          activeKey = _this$state3.activeKey,
-          contextMenu = _this$state3.contextMenu;
-      return React.createElement(React.Fragment, null, contextMenu && React.createElement("div", {
-        className: "contextMenu",
-        style: {
-          left: this.contextMenuLeft,
-          top: this.contextMenuTop
-        }
-      }, React.createElement("ul", null, React.createElement("li", {
-        onClick: function onClick() {
-          return _this4.reLoad(panes);
-        }
-      }, "\u5237\u65B0\u5F53\u524D\u9875"), React.createElement("li", {
-        onClick: function onClick() {
-          return _this4.closeTab('left');
-        }
-      }, "\u5173\u95ED\u5DE6\u4FA7\u6807\u7B7E"), React.createElement("li", {
-        onClick: function onClick() {
-          return _this4.closeTab('right');
-        }
-      }, "\u5173\u95ED\u53F3\u4FA7\u6807\u7B7E"))), React.createElement(Tabs, {
-        hideAdd: true,
-        onChange: this.onChange,
-        activeKey: activeKey,
-        type: "editable-card",
-        renderTabBar: function renderTabBar(DefaultTabBarProps, DefaultTabBar) {
-          return React.createElement(DefaultTabBar, DefaultTabBarProps, function (node, i) {
-            return React.createElement("span", {
-              onContextMenu: function onContextMenu(e) {
-                _this4.onContextMenu(e, node);
-              },
-              key: i
-            }, node);
-          });
-        },
-        onEdit: this.onEdit,
-        style: {
-          backgroundColor: '#fff'
-        },
-        tabBarStyle: {
-          margin: '0',
-          backgroundColor: '#eee'
-        }
-      }, _toConsumableArray(panes.values()).map(function (pane) {
-        return React.createElement(TabPane$1, {
-          tab: pane.title,
-          key: pane.key,
-          closable: pane.closable
-        }, React.createElement(Page, {
-          inner: true,
-          out: !pane.isFull
-        }, React.createElement(tabContext.Provider, {
-          value: {
-            remove: _this4.remove,
-            find: _this4.findTab
-          }
-        }, pane.content)));
-      })));
+      return this.compiler.run();
     }
   }]);
 
-  return TabLayout;
-}(React.Component);
+  return FormHook;
+}(React.Component)) || _class);
 
-export { Index$1 as City, Page, TabLayout };
+var index = {
+  AutoComponent: Index,
+  InputNumberGroup: InputNumberGroup,
+  City: Index$2,
+  FormHook: FormHook
+};
+
+export default index;

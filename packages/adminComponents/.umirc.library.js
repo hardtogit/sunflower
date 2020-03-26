@@ -5,7 +5,7 @@ export default {
   esm: 'rollup',
   cssModules: false,
   doc: {
-    title: '时光之穴',
+    title: 'sunflower组件文档',
     theme: 'docz-theme-umi',
     htmlContext: {
       head: {

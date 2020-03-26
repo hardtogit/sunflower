@@ -11,27 +11,29 @@ var _rcTrigger = _interopRequireDefault(require("rc-trigger"));
 
 var _classnames = _interopRequireDefault(require("classnames"));
 
-var _region = _interopRequireDefault(require("@cot/core/lib/region"));
+var _region = _interopRequireDefault(require("@sunflower/core/lib/region"));
 
 var _antd = require("antd");
 
 var _Popup = _interopRequireDefault(require("./Popup"));
 
-var _providerConfig = require("../../providerConfig");
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -39,9 +41,13 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+function _createSuper(Derived) { return function () { var Super = _getPrototypeOf(Derived), result; if (_isNativeReflectConstruct()) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -49,17 +55,17 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-var Index =
-/*#__PURE__*/
-function (_React$Component) {
+var Index = /*#__PURE__*/function (_React$Component) {
   _inherits(Index, _React$Component);
+
+  var _super = _createSuper(Index);
 
   function Index(props) {
     var _this;
 
     _classCallCheck(this, Index);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(Index).call(this, props));
+    _this = _super.call(this, props);
 
     _this.handleRemove = function (id) {
       var value = _this.state.value;
@@ -231,55 +237,53 @@ function (_React$Component) {
         }
       }
 
-      return _react.default.createElement(_providerConfig.ContainerContext.Consumer, null, function (fn) {
-        return _react.default.createElement(_rcTrigger.default, _extends({}, _this2.props, {
-          action: ['click'],
-          popup: _react.default.createElement(_Popup.default, _extends({}, _this2.props, {
-            triggerSelect: _this2.triggerSelect,
-            handleSelect: _this2.handleSelect
-          })),
-          popupVisible: visible,
-          destroyPopupOnHide: true // getPopupContainer={fn ||()=>{return document.getElementsByTagName('body')[0];}}
-          ,
-          popupStyle: {
-            zIndex: 1050,
-            width: '300px'
-          },
-          onPopupVisibleChange: _this2.handleDropdownVisibleChange,
-          popupAlign: {
-            points: ['tl', 'bl'],
-            offset: [0, 3]
-          }
-        }), _react.default.createElement("div", {
-          onClick: _this2.triggerSelect,
-          className: (0, _classnames.default)(['ant-select', disabled ? 'ant-select-disabled' : 'ant-select-enabled']),
-          style: {
-            width: '100%'
-          }
-        }, _react.default.createElement("div", {
-          className: "ant-select-selection ant-select-selection--multiple"
-        }, _react.default.createElement("div", {
-          className: "ant-select-selection__rendered"
-        }, (!value || value.length === 0) && _react.default.createElement("div", {
-          className: "ant-select-selection__placeholder"
-        }, "\u8BF7\u9009\u62E9\u5730\u5740"), _react.default.createElement("ul", null, regionData.map(function (value, index) {
-          return _react.default.createElement("li", {
-            key: index,
-            className: "ant-select-selection__choice"
-          }, _react.default.createElement("div", {
-            className: "ant-select-selection__choice__content"
-          }, value.name), _react.default.createElement("div", {
-            className: "ant-select-selection__choice__remove",
-            onClick: function onClick(e) {
-              e.stopPropagation();
+      return /*#__PURE__*/_react.default.createElement(_rcTrigger.default, _extends({}, this.props, {
+        action: ['click'],
+        popup: /*#__PURE__*/_react.default.createElement(_Popup.default, _extends({}, this.props, {
+          triggerSelect: this.triggerSelect,
+          handleSelect: this.handleSelect
+        })),
+        popupVisible: visible,
+        destroyPopupOnHide: true // getPopupContainer={fn ||()=>{return document.getElementsByTagName('body')[0];}}
+        ,
+        popupStyle: {
+          zIndex: 1050,
+          width: '300px'
+        },
+        onPopupVisibleChange: this.handleDropdownVisibleChange,
+        popupAlign: {
+          points: ['tl', 'bl'],
+          offset: [0, 3]
+        }
+      }), /*#__PURE__*/_react.default.createElement("div", {
+        onClick: this.triggerSelect,
+        className: (0, _classnames.default)(['ant-select', disabled ? 'ant-select-disabled' : 'ant-select-enabled']),
+        style: {
+          width: '100%'
+        }
+      }, /*#__PURE__*/_react.default.createElement("div", {
+        className: "ant-select-selection ant-select-selection--multiple"
+      }, /*#__PURE__*/_react.default.createElement("div", {
+        className: "ant-select-selection__rendered"
+      }, (!value || value.length === 0) && /*#__PURE__*/_react.default.createElement("div", {
+        className: "ant-select-selection__placeholder"
+      }, "\u8BF7\u9009\u62E9\u5730\u5740"), /*#__PURE__*/_react.default.createElement("ul", null, regionData.map(function (value, index) {
+        return /*#__PURE__*/_react.default.createElement("li", {
+          key: index,
+          className: "ant-select-selection__choice"
+        }, /*#__PURE__*/_react.default.createElement("div", {
+          className: "ant-select-selection__choice__content"
+        }, value.name), /*#__PURE__*/_react.default.createElement("div", {
+          className: "ant-select-selection__choice__remove",
+          onClick: function onClick(e) {
+            e.stopPropagation();
 
-              _this2.handleRemove(value.id);
-            }
-          }, _react.default.createElement(_antd.Icon, {
-            type: "close"
-          })));
-        }))))));
-      });
+            _this2.handleRemove(value.id);
+          }
+        }, /*#__PURE__*/_react.default.createElement(_antd.Icon, {
+          type: "close"
+        })));
+      }))))));
     }
   }]);
 

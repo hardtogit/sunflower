@@ -20,36 +20,36 @@ function getFieldValue(value, field = {}) {
  * @param extraFields 扩展的fields
  * @result 链式写法，返回链式对象(包含pick,excludes,enhance,values方法), 需要调用values返回最终的数据
  */
-export function createColumns(fields, fieldKeys, extraFields) {
-
+function createColumns(fields, fieldKeys, extraFields) {
   const chain = {};
   let columns = [];
 
-  const transform = (_fields) => _fields.map(field => {
+  const transform = _fields =>
+    _fields.map(field => {
       let { dataIndex, title, key, name, render, ...others } = field;
 
       if (!render) {
-        render = (value) => getFieldValue(value, field);
+        render = value => getFieldValue(value, field);
       }
 
       return {
         dataIndex: key || dataIndex,
         title: name || title,
         render,
-        ...others
+        ...others,
       };
     });
 
-  const pick = (_fieldKeys) => {
+  const pick = _fieldKeys => {
     _fieldKeys = [].concat(_fieldKeys);
     columns = _fieldKeys.map(fieldKey => {
-      let column = columns.find(item => fieldKey === (item.key || item.dataIndex));
+      let column = columns.find(item => fieldKey == (item.key || item.dataIndex));
       if (!column) {
         // 如果fieldKey不存在，则创建text类型的column
         column = {
           dataIndex: fieldKey,
           title: fieldKey,
-          render: (value) => getFieldValue(value)
+          render: value => getFieldValue(value),
         };
       }
       return column;
@@ -57,32 +57,34 @@ export function createColumns(fields, fieldKeys, extraFields) {
     return chain;
   };
 
-  const excludes = (_fieldKeys) => {
+  const excludes = _fieldKeys => {
     _fieldKeys = [].concat(_fieldKeys);
     columns = columns.filter(column => !_fieldKeys.includes(column.dataIndex));
     return chain;
   };
 
-  const enhance = (_extraColumns) => {
+  const enhance = _extraColumns => {
     if (!Array.isArray(_extraColumns)) {
-      _extraColumns = Object.keys(_extraColumns).map(key => Object.assign(_extraColumns[key], {
-          key
-        }));
+      _extraColumns = Object.keys(_extraColumns).map(key =>
+        Object.assign(_extraColumns[key], {
+          key,
+        }),
+      );
     }
     _extraColumns.forEach(extraColumn => {
       const { dataIndex, title, key, name, ...others } = extraColumn;
       extraColumn = {
         dataIndex: key || dataIndex,
         title: name || title,
-        ...others
+        ...others,
       };
 
       // 如果extraColumn.title为undefined，则删除title属性，防止assign时覆盖掉原来的title
-      if (extraColumn.hasOwnProperty('title') && extraColumn.title === undefined) {
+      if (extraColumn.hasOwnProperty('title') && extraColumn.title == undefined) {
         delete extraColumn.title;
       }
 
-      const column = columns.find(item => item.dataIndex === extraColumn.dataIndex);
+      const column = columns.find(item => item.dataIndex == extraColumn.dataIndex);
       if (column) {
         Object.assign(column, extraColumn);
       } else {
@@ -109,12 +111,12 @@ export function createColumns(fields, fieldKeys, extraFields) {
     pick,
     excludes,
     enhance,
-    values
+    values,
   });
 }
 
 export default {
   combineTypes,
   getFieldValue,
-  createColumns
+  createColumns,
 };

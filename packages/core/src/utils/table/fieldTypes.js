@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { Type } from '../type';
+import _ from 'lodash';
 
 /**
  * 测试
@@ -12,8 +12,8 @@ import { Type } from '../type';
  * console.log('空对象', isValide({})); // 空对象 false
  * console.log('空数组', isValide([])); // 空数组 false
  */
-const isValid = (date) => {
-  return Boolean(date) && (Type.isNumber(date) || Type.isString(date));
+const isValid = date => {
+  return Boolean(date) && (_.isNumber(date) || _.isString(date));
 };
 
 const getParsedDate = (date, format) => {
@@ -34,7 +34,7 @@ const fieldTypes = {
   time: value => getParsedDate(value, 'HH:mm:ss'),
   month: value => getParsedDate(value, 'YYYY-MM'),
   dateRange: value => {
-    if (!Type.isArray(value)) {
+    if (!_.isArray(value)) {
       return '';
     }
     const start = getParsedDate(value[0], 'YYYY-MM-DD');
@@ -42,7 +42,7 @@ const fieldTypes = {
     return `${start} - ${end}`;
   },
   datetimeRange: value => {
-    if (!Type.isArray(value)) {
+    if (!_.isArray(value)) {
       return '';
     }
     const start = getParsedDate(value[0], 'YYYY-MM-DD HH:mm:ss');
@@ -50,7 +50,7 @@ const fieldTypes = {
     return `${start} - ${end}`;
   },
   monthRange: value => {
-    if (!Type.isArray(value)) {
+    if (!_.isArray(value)) {
       return '';
     }
     const start = getParsedDate(value[0], 'YYYY-MM');
@@ -58,38 +58,38 @@ const fieldTypes = {
     return `${start} - ${end}`;
   },
   range: value => {
-    if (!Type.isArray(value)) {
+    if (!_.isArray(value)) {
       return '';
     }
     return value.join('-');
   },
   enum: (value, { enums }) => {
     let enumValue;
-    if (Type.isEmpty(value)) {
+    if (_.isNull(value)) {
       enumValue = '';
-    } else if (Type.isObject(enums)) {
+    } else if (_.isObject(enums)) {
       enumValue = enums[value];
-    } else if (Type.isArray(enums)) {
+    } else if (_.isArray(enums)) {
       enumValue = (enums.find(x => x.value === value) || {}).label || value;
     }
     return enumValue;
   },
   enumGroup: (value, { options }) => {
     let enumGroup = [];
-    if (!Type.isArray(value)) {
+    if (!_.isArray(value)) {
       enumGroup = [value];
-    } else if (Type.isObject(options)) {
+    } else if (_.isObject(options)) {
       enumGroup = value.map(v => options[v]);
-    } else if (Type.isArray(options)) {
+    } else if (_.isArray(options)) {
       enumGroup = value.map(v => (options.find(x => x.value === v) || {}).label);
     }
     return enumGroup.filter(v => v !== undefined && v !== '').join(',');
   },
   cascader: (value, { options }) => {
     let cascader = [];
-    if (!Type.isArray(value)) {
+    if (!_.isArray(value)) {
       cascader = [value];
-    } else if (!Type.isArray(options)) {
+    } else if (!_.isArray(options)) {
       cascader = value;
     } else {
       cascader = [];
@@ -105,7 +105,7 @@ const fieldTypes = {
       }
     }
     return cascader.filter(v => v !== undefined && v !== '').join('/');
-  }
+  },
 };
 
 /*

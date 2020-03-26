@@ -7,7 +7,7 @@ exports["default"] = exports.combineTypes = void 0;
 
 var _moment = _interopRequireDefault(require("moment"));
 
-var _type = require("../type");
+var _lodash = _interopRequireDefault(require("lodash"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -23,7 +23,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "d
  * console.log('空数组', isValide([])); // 空数组 false
  */
 var isValid = function isValid(date) {
-  return Boolean(date) && (_type.Type.isNumber(date) || _type.Type.isString(date));
+  return Boolean(date) && (_lodash["default"].isNumber(date) || _lodash["default"].isString(date));
 };
 
 var getParsedDate = function getParsedDate(date, format) {
@@ -63,7 +63,7 @@ var fieldTypes = {
     return getParsedDate(value, 'YYYY-MM');
   },
   dateRange: function dateRange(value) {
-    if (!_type.Type.isArray(value)) {
+    if (!_lodash["default"].isArray(value)) {
       return '';
     }
 
@@ -72,7 +72,7 @@ var fieldTypes = {
     return "".concat(start, " - ").concat(end);
   },
   datetimeRange: function datetimeRange(value) {
-    if (!_type.Type.isArray(value)) {
+    if (!_lodash["default"].isArray(value)) {
       return '';
     }
 
@@ -81,7 +81,7 @@ var fieldTypes = {
     return "".concat(start, " - ").concat(end);
   },
   monthRange: function monthRange(value) {
-    if (!_type.Type.isArray(value)) {
+    if (!_lodash["default"].isArray(value)) {
       return '';
     }
 
@@ -90,7 +90,7 @@ var fieldTypes = {
     return "".concat(start, " - ").concat(end);
   },
   range: function range(value) {
-    if (!_type.Type.isArray(value)) {
+    if (!_lodash["default"].isArray(value)) {
       return '';
     }
 
@@ -100,11 +100,11 @@ var fieldTypes = {
     var enums = _ref.enums;
     var enumValue;
 
-    if (_type.Type.isEmpty(value)) {
+    if (_lodash["default"].isNull(value)) {
       enumValue = '';
-    } else if (_type.Type.isObject(enums)) {
+    } else if (_lodash["default"].isObject(enums)) {
       enumValue = enums[value];
-    } else if (_type.Type.isArray(enums)) {
+    } else if (_lodash["default"].isArray(enums)) {
       enumValue = (enums.find(function (x) {
         return x.value === value;
       }) || {}).label || value;
@@ -116,13 +116,13 @@ var fieldTypes = {
     var options = _ref2.options;
     var enumGroup = [];
 
-    if (!_type.Type.isArray(value)) {
+    if (!_lodash["default"].isArray(value)) {
       enumGroup = [value];
-    } else if (_type.Type.isObject(options)) {
+    } else if (_lodash["default"].isObject(options)) {
       enumGroup = value.map(function (v) {
         return options[v];
       });
-    } else if (_type.Type.isArray(options)) {
+    } else if (_lodash["default"].isArray(options)) {
       enumGroup = value.map(function (v) {
         return (options.find(function (x) {
           return x.value === v;
@@ -138,9 +138,9 @@ var fieldTypes = {
     var options = _ref3.options;
     var cascader = [];
 
-    if (!_type.Type.isArray(value)) {
+    if (!_lodash["default"].isArray(value)) {
       cascader = [value];
-    } else if (!_type.Type.isArray(options)) {
+    } else if (!_lodash["default"].isArray(options)) {
       cascader = value;
     } else {
       cascader = [];

@@ -1,0 +1,56 @@
+---
+name: InputNumberGroup
+route: /inputNumberGroup
+order: 1
+menu: 基础组件
+sidebar: true
+---
+import 'antd/dist/antd.css'
+import InputNumberGroup from './index';
+import Scope from './scope';
+import { Row, Col} from 'antd';
+
+###  InputNumberGroup
+
+#### 基本使用
+
+<Row>
+    <Col span={6}>
+    <InputNumberGroup addonAfter="斤" addonBefore="重量"/>
+    </Col>
+</Row>
+
+
+```js
+     <InputNumberGroup addonAfter="斤" addonBefore="重量"/>
+```
+
+## API
+
+|名称|默认值|是否必须|说明|
+|----|  ----| ----| ----|
+|addonBefore|false|否|前置描述|
+|addonAfter|false|否|后置描述|
+|...InputNumberProps|false'|否|InputNumber的全部属性|
+
+###  Scope
+
+#### 基本使用
+
+<Row>
+    <Col span={6}>
+    <Scope unit='元'/>
+    </Col>
+</Row>
+
+
+```js
+     <Scope unit='元'/>
+```
+
+## API
+
+|名称|默认值|是否必须|说明|
+|----|  ----| ----| ----|
+|unit|false|否|单位|
+|...InputNumberProps|false'|否|InputNumber的全部属性|

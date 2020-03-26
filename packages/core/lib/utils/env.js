@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.isNative = isNative;
 exports.noop = noop;
 exports.isChrome = exports.isIOS = exports.isAndroid = exports.isEdge = exports.isIE9 = exports.isIE = exports.UA = exports.inBrowser = exports.hasProto = void 0;
-var hasProto = '__proto__' in {}; // Browser environment sniffing
+var hasProto = ('__proto__' in {}); // Browser environment sniffing
 
 exports.hasProto = hasProto;
 var inBrowser = typeof window !== 'undefined';

@@ -1,8 +1,8 @@
 import React from 'react';
 import { InputNumber } from 'antd';
 import PropTypes from 'prop-types';
-import type from '@cot/core/lib/utils/type';
-import Scope from './scope';
+import type from '@sunflower/core/lib/utils/type';
+// import Scope from './scope';
 
 class InputNumberGroup extends React.Component {
   static defaultProps={
@@ -57,5 +57,5 @@ InputNumberGroup.propTypes = {
   addonBefore: PropTypes.string,
   addonAfter: PropTypes.string
 };
-InputNumberGroup.Scope = Scope;
+// InputNumberGroup.Scope = Scope;
 export default InputNumberGroup;
