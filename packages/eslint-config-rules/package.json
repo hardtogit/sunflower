@@ -15,7 +15,7 @@
     "README.md"
   ],
   "dependencies": {
-    "eslint": "^4.5.0",
+    "eslint": "^8.40.0",
     "eslint-config-airbnb": "^15.1.0",
     "eslint-plugin-import": "^2.7.0",
     "eslint-plugin-jsx-a11y": "^6.0.2",
